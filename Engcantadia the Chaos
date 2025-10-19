@@ -1,0 +1,140 @@
+local WindUI = loadstring(game:HttpGet("https://github.com/Footagesus/WindUI/releases/latest/download/main.lua"))()
+
+-- Create window
+local Window = WindUI:CreateWindow({
+    Title = "Lyravoid HUB",
+    Icon = "door-open",
+    Author = "Lyravoid",
+    Size = UDim2.fromOffset(1000, 500),
+    Theme = "Dark",
+    Resizable = true,
+    Background = "rbxassetid://96368639036805",
+    BackgroundTransparency = 0.2,
+})
+
+-- Add the tag to the window
+Window:Tag({
+    Title = "v1.6.4",
+    Color = Color3.fromHex("#30ff6a"),
+    Radius = 0,
+})
+
+-- Create the section
+local Section = Window:Section({
+    Title = "Hub Features",
+    Icon = "house",
+    Opened = true,
+})
+
+-- Create the Main Tab for Character Toggles
+local MainTab = Section:Tab({
+    Title = "Characters",
+    Icon = "users",
+    Size = UDim2.fromOffset(250, 400)
+})
+
+-- Create the NEW Tab for Exploits/Aura
+local ExploitTab = Section:Tab({
+    Title = "Combat",
+    Icon = "sword", -- Lucide icon for a sword
+    Size = UDim2.fromOffset(250, 400)
+})
+
+---------------------------------------------------
+-- 👇 Kill Aura Controls (Dito Po Yung Kill Aura)
+---------------------------------------------------
+
+-- Utility variables for Kill Aura State
+local killAuraEnabled = false
+local killAuraRange = 15 -- Default range
+
+ExploitTab:Paragraph({
+    Title = "Kill Aura",
+    Content = "Automatically attacks nearby enemies.",
+    Icon = "info",
+})
+
+-- Kill Aura Toggle
+ExploitTab:Toggle({
+    Title = "Enable Kill Aura",
+    Description = "Turns the automatic combat system on or off.",
+    Icon = "shield-off", -- Icon will change when toggled, but a default is set here
+    Callback = function(value)
+        killAuraEnabled = value
+        if killAuraEnabled then
+            print("Kill Aura Enabled. Range: " .. killAuraRange)
+            -- **TODO: Start Kill Aura logic (e.g., spawn a new thread/coroutine)**
+        else
+            print("Kill Aura Disabled.")
+            -- **TODO: Stop Kill Aura logic**
+        end
+    end
+})
+
+-- Kill Aura Range Input (Changed from Slider to Input for unlimited adjustment)
+ExploitTab:Input({
+    Title = "Aura Range",
+    Description = "Set the maximum distance to attack targets (in studs). Enter any number.",
+    Placeholder = "15",
+    Type = "number",
+    Callback = function(value)
+        local numValue = tonumber(value)
+        if numValue and numValue > 0 then
+            killAuraRange = numValue
+            print("Kill Aura Range set to: " .. numValue)
+            -- **TODO: Update range in active Kill Aura logic**
+        else
+            WindUI:Notify({
+                Title = "Invalid Input",
+                Content = "Please enter a positive number for the range.",
+                Icon = "alert-triangle",
+                Duration = 3
+            })
+        end
+    end
+})
+
+---------------------------------------------------
+-- 👇 Character Buttons (Original Content)
+---------------------------------------------------
+
+-- Utility function to easily find and set visibility
+local function setCharacterVisible(characterName)
+    local player = game:GetService("Players").LocalPlayer
+    
+    local charObject = player:WaitForChild("PlayerGui", 5) 
+        :WaitForChild("Character", 5)
+        :WaitForChild("Frame", 5)
+        :WaitForChild("ScrollingFrame", 5)
+        :WaitForChild(characterName, 5)
+
+    if charObject then
+        charObject.Visible = true
+        WindUI:Notify({
+            Title = characterName .. " Shown",
+            Content = "Visibility enabled successfully.",
+            Icon = "check-circle",
+            Duration = 3
+        })
+    else
+        WindUI:Notify({
+            Title = "Error",
+            Content = characterName .. " GUI object not found.",
+            Icon = "alert-triangle",
+            Duration = 5
+        })
+    end
+end
+
+MainTab:Paragraph({
+    Title = "Character Access",
+    Content = "Toggles visibility for different character gamepasses/items.",
+    Icon = "info",
+})
+
+MainTab:Button({ Title = "Mitena", Description = "Toggle visibility for MitenaGamepass.", Icon = "user-check", Callback = function() setCharacterVisible("MitenaGamepass") end, })
+MainTab:Button({ Title = "Mitena Wardrobe", Description = "Toggle visibility for MitenaWardrobe.", Icon = "t-shirt", Callback = function() setCharacterVisible("MitenaWardrobe") end, })
+MainTab:Button({ Title = "Amihan", Description = "Toggle visibility for Amihan.", Icon = "user-check", Callback = function() setCharacterVisible("Amihan") end, })
+MainTab:Button({ Title = "Amihan Ivtre", Description = "Toggle visibility for AmihanSkinIvtre.", Icon = "user-plus", Callback = function() setCharacterVisible("AmihanSkinIvtre") end, })
+MainTab:Button({ Title = "Cassiopeia Skin", Description = "Toggle visibility for Cassiopeia Skin.", Icon = "user-plus", Callback = function() setCharacterVisible("Cassiopeia Skin") end, })
+MainTab:Button({ Title = "Anaca", Description = "Toggle visibility for AnacaBADGEPASS.", Icon = "badge-check", Callback = function() setCharacterVisible("AnacaBADGEPASS") end, })
